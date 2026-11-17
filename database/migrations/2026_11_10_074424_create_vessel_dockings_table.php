@@ -11,28 +11,36 @@ return new class extends Migration
         Schema::create('vessel_dockings', function (Blueprint $table) {
             $table->id();
 
-            $table->string('vessel_imo_number', 10);
+            // Vessel Foreign Key
+            $table->foreignId('vessel_id')
+                ->constrained('vessels')
+                ->onDelete('restrict');
 
-            $table->foreign('vessel_imo_number')
-                ->references('vessel_imo_number')
-                ->on('vessels')
-                ->restrictOnDelete();
-
+            // Berth Slot Foreign Key
             $table->foreignId('berth_slot_id')
                 ->constrained('berth_slots')
-                ->restrictOnDelete();
+                ->onDelete('restrict');
 
+            // Berth Rate Foreign Key
             $table->foreignId('berth_rate_id')
                 ->constrained('berth_rates')
-                ->restrictOnDelete();
+                ->onDelete('restrict');
 
             $table->dateTime('arrival_time');
-            $table->dateTime('departure_time')->nullable();
 
-            $table->decimal('total_hours', 10, 2)->default(0);
-            $table->decimal('total_berth_fee', 12, 2)->default(0);
+            $table->dateTime('departure_time')
+                ->nullable();
+
+            $table->decimal('total_hours', 12, 2)
+                ->default(0);
+
+            $table->decimal('total_berth_fee', 14, 2)
+                ->default(0);
 
             $table->timestamps();
+
+            $table->index('arrival_time');
+            $table->index('departure_time');
         });
     }
 

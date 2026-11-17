@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class VesselDocking extends Model
 {
@@ -18,32 +16,29 @@ class VesselDocking extends Model
         'total_berth_fee',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'arrival_time' => 'datetime',
-            'departure_time' => 'datetime',
-            'total_hours' => 'decimal:2',
-            'total_berth_fee' => 'decimal:2',
-        ];
-    }
+    protected $casts = [
+        'arrival_time' => 'datetime',
+        'departure_time' => 'datetime',
+        'total_hours' => 'decimal:2',
+        'total_berth_fee' => 'decimal:2',
+    ];
 
-    public function vessel(): BelongsTo
+    public function vessel()
     {
         return $this->belongsTo(Vessel::class);
     }
 
-    public function berthSlot(): BelongsTo
+    public function berthSlot()
     {
         return $this->belongsTo(BerthSlot::class);
     }
 
-    public function berthRate(): BelongsTo
+    public function berthRate()
     {
         return $this->belongsTo(BerthRate::class);
     }
 
-    public function payment(): HasOne
+    public function payment()
     {
         return $this->hasOne(Payment::class);
     }

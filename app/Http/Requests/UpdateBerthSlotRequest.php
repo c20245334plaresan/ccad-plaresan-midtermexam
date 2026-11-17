@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+
+class UpdateBerthSlotRequest extends FormRequest
+{
+   
+    public function rules(): array
+    {
+        $id = $this->route('berth_slot');
+
+        return [
+            'berth_slot' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('berth_slots', 'berth_slot')->ignore($id),
+            ],
+
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'berth_slot' => Str::upper(trim((string) $this->input('berth_slot'))),
+        ]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'berth_slot.required' => 'Berth slot is required.',
+            'berth_slot.unique' => 'This berth slot already exists.',
+            'berth_slot.max' => 'Berth slot cannot exceed 50 characters.',
+        ];
+    }
+}
